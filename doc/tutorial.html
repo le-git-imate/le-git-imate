@@ -1,0 +1,176 @@
+
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!--link rel="stylesheet" href="../assets/css/bootstrap.css">
+         <link rel="stylesheet" href="../assets/css/legitimate.css"-->
+      <link rel="stylesheet" href="../assets/css/help.css">
+      <link rel="stylesheet" href="../assets/css/main.css">
+      <link rel="stylesheet" href="../assets/css/mv.css">
+      <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+      <title>le-git-imate</title>
+   </head>
+   <body data-mvelo="true">
+      <div>
+         <div>
+            <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+               <div class="container">
+                  <a class="navbar-brand" href="https://le-git-imate.github.io"><img src="../assets/img/logo.png" alt="le-git-imate"/> le-git-imate</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                     <ul class="navbar-nav mr-auto">
+                     </ul>
+                     <ul class="navbar-nav">
+                        <li class="nav-item" role="menuitem"><a class="nav-link" tabindex="0" href="../config/setup.html">Settings</a></li>
+                        <li class="nav-item"><a class="nav-link" href="tutorial.html" target="_blank" rel="noreferrer noopener" tabindex="0">Documentation</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html" target="_blank" rel="noreferrer noopener" tabindex="0">About</a></li>
+                     </ul>
+                  </div>
+               </div>
+            </nav>
+            <main class="container" role="main">
+               <div class="d-flex flex-wrap align-items-center w-100 my-3">
+                  <h3 class="flex-shrink-0">Tutorial</h3>
+               </div>
+               <div class="jumbotron secureBackground">
+                  <section class="card">
+                  <div class="card-body">
+
+                     <section id="accounts">
+                        <div class="page-header text-muted">
+                           <h1>Account Setting</h1>
+                        </div>
+                        <p>To import account info, you need to provide the account name, password and person token as shown below.
+			You may check out <a href="https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line" target="_blank"> GitHub </a>
+			or <a href="https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html" target="_blank" > GitLab</a> for more info on creating personal tokens. 
+			</p>
+                        <div class="thumbnail well">
+                           <img src="../assets/img/accounts.png" alt="Accounts" class="img-center" ><!--width="700" height="640"-->
+                           <!--div class="caption">
+                              <h4>Key Management Menu</h4>
+                              </div-->
+                        </div>
+                     </section>
+
+
+                     <hr color="green" style="height:1px">
+                     <!-- Key Management
+                        ================================================== -->
+                     <section id="key-mng">
+                        <div class="page-header text-muted">
+                           <h1>Key Management</h1>
+                        </div>
+                        <p>To add a new key, click on the extension. Then in the pop up window, click on the Settings button.</p>
+                        <div class="thumbnail well">
+                           <img src="../assets/img/browser_action.png" alt="Popup Window" class="img-center" ><!--width="700" height="640"-->
+                           <!--div class="caption">
+                              <h4>Browser Action Popup</h4>
+                              </div-->
+                        </div>
+                        <br>
+                        <p>In the key management section, you can either import or generate a key.</p>
+                        <div class="thumbnail well">
+                           <img src="../assets/img/key_management.png" alt="Key Management" class="img-center" ><!--width="700" height="640"-->
+                           <!--div class="caption">
+                              <h4>Key Management Menu</h4>
+                              </div-->
+                        </div>
+                        <!-- Importing Keys -->
+                        <h2 id="keyImport">Import Key</h2>
+                        <!--p>You can import an existing pgp key, by either uploading a key file or inserting a key text. Both need to be in armored format.</p>
+                           <ui>
+                              <li><b>Import key from file</b>: Pick a key file in the local storage to import into the le-git-mate key store.</li>
+                              <li><b>Import key as text</b>: Insert a key in the text area and then click on "Import" button to transfer it into the local key store.</li>
+                           </ui-->
+                        <p>You can import an existing pgp key in the armored format, by inserting the key as text in the textarea. 
+                           Clicking on "Import Key" button, a new key will be added to the local key store.
+                        </p>
+                        <!-- Generating Keys -->
+                        <h2>Generate Key</h2>
+                        <p>In order to generate a key, you need to provide a name and an email address.
+                           The key size is set to 2048 bits by default. Clicking on "Generate Key" button, a new key is
+                           generated and will be added to the local key store. 
+                        </p>
+                     </section>
+                     <hr color="green" style="height:1px">
+                     <!-- Sign Commits
+                        ================================================== -->
+                     <section id="commit_sign">
+                        <div class="page-header text-muted">
+                           <h1>Commit Signing</h1>
+                        </div>
+                        <p>
+                           When you are ready to a Web UI commit, you should firstly press the the <font face="Courgette">le-git-imate</font> 
+                           extention button, and when the commit is shown in a pop-up window, you can press the "Push Commit" button.
+                           <!-- Regular Commit -->
+                        <h2>Regular Commit</h2>
+                        <p>
+                           GitHub/GitLab web UI provides several options to make direct changes into the repository,
+                           such as adding a new file, deleting an existing file, or modifying an existing file.
+                           In the following, we illustrate how to create signed web UI commits using le-git-imate. 
+                           <!-- Edit file -->
+                           <br>
+                        <h3 id="edit_file" style="font-weight:bold">Edit a file</h3>
+                        <h5>After editing the content of an existing file, instead of using default commit button, follow two simple steps:</h5>
+                        <ol>
+                           <li> Click on the extension button, and wait for the signed commit to be appeared in the pop-up window.</li>
+                           <li>
+                              As you can see below, a pop-up window displays the new signed commit with three text areas:
+                              (1) information about parent commit, (2) for regular commits, the differences between the parent commit and the commit that is about to be created.
+                              (3) the new signed commit.
+                              If you are satisfied with the new commit, you can press the "Push Commit" button in the pop-up window
+                              <!--img src="../assets/img/push_button.png" alt="Commit Changes" class="img-rounded" class="img-center"--> 
+                              to submit the commit to the server.
+                           </li>
+                        </ol>
+                        <div class="thumbnail well">
+                           <img src="../assets/img/signed_commit.png" alt="Signature Added" class="img-center"><!--width="200" height="220"-->
+                           <!--div class="caption">
+                              <h4>Signed Commit</h4>
+                              </div-->
+                        </div>
+                        <!-- Add new file -->
+                        <br>
+                        <h3 id="add_file" style="font-weight:bold">Add a new file</h3>
+                        <h5>Once you create a new file, and you are ready to submit a new commit, click on the extension button, 
+                           and then follow the second step mentioned <a href="#edit_file">above</a>.
+                        </h5>
+                        <!-- Delete file -->
+                        <br>
+                        <h3 id="delete_file" style="font-weight:bold">Delete a file</h3>
+                        <h5>When you are ready to delete a file click instead of using default commit button, click on the extension button and then follow the second step mentioned
+                           <a href="#edit_file">above</a>.
+                        </h5>
+                        <!-- Upload file -->
+                        <!--h3 style="font-weight:bold">Upload a file</h3>
+                           <!-- Merge Commit -->
+                        <h2></h2>
+                        <h2 id="merge_commit">Merge Commit</h2>
+                        <h5> In the merge request page, press the extension button and then follow the second step mentioned
+                           <a href="#edit_file">above</a>.
+                        </h5>
+                        <!-- Message Format -->
+                        <h2 id="commit_format">Commit Format</h2>
+                        <p>With OpenPGP signature, the final commit is encoded in a specific format as follows.</p>
+                        <pre>tree eb02d2eb1fa04f61cddc82fadc218ebbd430c97a<br>parent d1d62e5cd40c4b616b1a6db1d749cbc6bb151247<br>author Hammad Afzali &lt;hammad.afzali@gmail.com&gt; 1563461680 -0400<br>committer Hammad Afzali &lt;hammad.afzali@gmail.com&gt; 1563461680 -0400<br>gpgsig -----BEGIN PGP SIGNATURE-----<br> Version: OpenPGP.js v2.1.0<br> Comment: http://openpgpjs.org
+<br> iQEcBAABAgAGBQJdMIiiAAoJEP/T/DW0y8izxN4H/jX79GvZL7NQ8YJ4zytmXoU7<br> 9leVwPZpjeKkstj4D55f6MMMVhfldvoQlKN3Px0ox8mtL/hG4u5PTCQpIaT9DWh2<br> Vk9GFNBntdxVIjRHQ1Vq8v5SeX/vTVJ2VHGJQ6Cki/gPKYv/ImyHhenuA+TO8wzE<br> iEydHeNDztQs8dMRUTP5i/IY15yJnAlojUTbjy2xEYoFVAHcfB8NL8n46cpuUAvR<br> lDjPFhsOGjZV+h2zlv76FXaeeNkQGADrO8x3QXOIwNxhgO+rWJw9vDMS7fHoJM+J<br> CpcJyE9oBDwNtRukpFxycRDEFLuGTly0ECGWF9vEh0NPd1vb4KfKoyGJIohNExc=<br> =L/hN<br> -----END PGP SIGNATURE-----</pre>
+                  </div>
+                  </section>
+               </div>
+            </main>
+            <footer class="bg-light">
+               <div class="container d-flex justify-content-between text-muted">
+                  <p class="mb-0">© 2019 le-git-imate</p>
+                  <p class="social-network">
+                     <a class="nav-link" href="https://github.com/le-git-imate/le-git-imate/" target="_blank" rel="noreferrer noopener" tabindex="0"><i class="icon-bg-light icon-github icon-circled icon-2x"></i></a>
+                  </p>
+               </div>
+            </footer>
+         </div>
+      </div>
+   </body>
+</html>
+
+
