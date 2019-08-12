@@ -8,7 +8,7 @@ For more technical details, please refer to our paper
 
 ## Installation
 
-`le-git-imate` is available in the [`Chrome Web Store`](#). You may also check the [releases](https://github.com/le-git-imate/le-git-imate/releases)
+`le-git-imate` is available in the [`Chrome Web Store`](https://chrome.google.com/webstore/detail/machjblobfgnkmffcknocdcpipgckggg). You may also check the [releases](https://github.com/le-git-imate/le-git-imate/releases)
 section for the latest build of the installation package.
 To the best use of `le-git-imate`, it is recommended that you take a look at the [issue tracker](https://github.com/le-git-imate/le-git-imate/issues) before trying it out.
 

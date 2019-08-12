@@ -1,0 +1,76 @@
+
+
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <link rel="stylesheet" href="assets/css/diffview.css">
+      <link rel="stylesheet" href="assets/css/action.css">
+   </head>
+   <body>
+      <!--TODO: Improve the UI-->
+      <div id="popup">
+         <div class="form-group">
+            <label id="title-bar" class="control-label" for="parent_info">Parent commit</label>
+            <div class="col-md-4">
+               <textarea class="form-control" style="width: 510px; height: 100px;" id="parent_info" name="parent_info" spellcheck="false"></textarea>
+               <br>
+            </div>
+            <div id="diffoutput"> </div>
+            <br>
+            <label id="title-bar" class="control-label" for="commitBox">Singed commit</label>
+            <div class="col-md-4">
+               <textarea class="form-control" style="width: 510px; height: 130px;" id="commitBox" name="commitBox" spellcheck="false"></textarea>
+               <br>
+            </div>
+            <button id='push_commit'><b>Push Commit</b></button>
+            <div class="form-group" style="text-align: right;clear:left;">
+               <a class="btn btn-primary btn-sm" href="../doc/about.html" target="_blank" style="width: 96%" rel="noreferrer">About</a>
+               <a class="btn btn-primary btn-sm" href="config/setup.html" target="_blank" style="width: 96%" rel="noreferrer">Settings</a>
+            </div>
+         </div>
+      </div>
+      <!-- scripts
+         ===========================================-->
+      <script src='app.js'></script>
+      <script src='dispatch.js'></script>
+      <script src='./config/config.js'></script>
+      <script src='./config/constants.js'></script>
+      <script src='./config/setup.js'></script>
+
+      <script src='./commit/commit.js'></script>
+      <script src='./commit/createObject.js'></script>
+      <script src='./commit/createPackfile.js'></script>
+      <script src='./commit/merge.js'></script>
+      <script src='./commit/mergeAssets.js'></script>
+      <script src='./commit/regular.js'></script>
+      <script src='./commit/regularAssets.js'></script>
+      <script src='./commit/util.js'></script>
+
+      <script src='./connection/api.js'></script>
+      <script src='./connection/parser.js'></script>
+      <script src='./connection/request.js'></script>
+      <script src='./connection/util.js'></script>
+
+      <script src='./utils/formMessages.js'></script>
+      <script src='./utils/pageRefresh.js'></script>
+      <script src='./utils/uiParser.js'></script>
+      <script src='./utils/util.js'></script>
+
+      <script src='./libs/bundle.js'></script>
+      <script src="./libs/openpgp.js"></script>
+      <script src="./libs/sha1.js"></script>
+
+      <script src="./xdiff/xmerge.js"></script>
+      <script src="./xdiff/xdiff.js"></script>
+      <script src="./xdiff/xdiffi.js"></script>
+      <script src="./xdiff/xutil.js"></script>
+      <script src="./xdiff/xprepare.js"></script>
+
+      <script src="./diffView/difflib.js"></script>
+      <script src="./diffView/diffview.js"></script>
+      <script src='./diffView/handler.js'></script>
+      <!-- scripts
+         ===========================================-->
+   </body>
+</html>
