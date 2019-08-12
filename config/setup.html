@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="../assets/css/main.css">
+      <link rel="stylesheet" href="../assets/css/mv.css">
+      <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
+      <title>le-git-imate Setup</title>
+   </head>
+   <body data-mvelo="true">
+      <nav class="navbar fixed-top navbar-expand-md navbar-light bg-light">
+         <div class="container">
+            <a class="navbar-brand" href="https://le-git-imate.github.io"><img src="../assets/img/logo.png" alt="le-git-imate"/> le-git-imate</a><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav mr-auto">
+               </ul>
+               <ul class="navbar-nav">
+                  <li class="nav-item" role="menuitem"><a class="nav-link" tabindex="0" href="setup.html">Settings</a></li>
+                  <li class="nav-item"><a class="nav-link" href="../doc/tutorial.html" target="_blank" rel="noreferrer noopener" tabindex="0">Documentation</a></li>
+                  <li class="nav-item"><a class="nav-link" href="../doc/about.html" target="_blank" rel="noreferrer noopener" tabindex="0">About</a></li>
+               </ul>
+            </div>
+         </div>
+      </nav>
+      <main class="container" role="main">
+         <div class="d-flex flex-wrap align-items-center w-100 my-3">
+            <h3 class="flex-shrink-0">Setup</h3>
+		<div>
+             	<strong> To start using signing commits through GitHub/GitLab web UI, you 
+		<font color="red"> must</font> first configure le-git-imate by adding account information (GitHub or GitLab account), and importing/generating a PGP key.
+		More information on how to configure and use the le-git-imate extension is available <a href="../doc/tutorial.html">here</a>.</strong>
+		</div>
+            <div class="ml-auto flex-shrink-0"></div>
+         </div>
+         <div class="jumbotron secureBackground">
+            <section class="card">
+               <div class="card-body">
+                  <form class="form">
+                     <h4>Accounts</h4>
+                     <h5 class="card-title">GitHub</h5>
+                     <p>If you want to sign commits through GitHub web UI, please import your account information.</p>
+                  <form class="form" autocomplete="off">
+                     <div class="form-group"><label>Username</label><input type="text" class="form-control" id="github_user" aria-describedby="nameHelpBlock"><small 								id="nameHelpBlock" class="form-text text-muted">GitHub Username</small></div>
+                     <div class="form-group"><label>Password</label><input type="password" class="form-control" id="github_pass" data-toggle="password"><small 								id="nameHelpBlock" class="form-text text-muted">GitHub Password</small></div><!--TODO: SHOW/HIDE Password-->
+                     <div class="form-group"><label>Token</label><input type="password" class="form-control" id="github_token" data-toggle="password"><small 								id="nameHelpBlock" class="form-text text-muted">GitHub Personal Token</small></div><!--TODO: SHOW/HIDE Token-->
+                  </form>
+                  <div class="btn-bar"><button type="button" class="btn btn-primary" id="add-github">Add GitHub</button></div>
+                  <hr>
+                  <h5 class="card-title">GitLab</h5>
+                  <p>If you want to sign commits through GitLab web UI, please import your account information.</p>
+                  <form class="form" autocomplete="off">
+                     <div class="form-group"><label>Username</label><input type="text" class="form-control" id="gitlab_user" aria-describedby="nameHelpBlock" value=""><small 								id="nameHelpBlock" class="form-text text-muted">GitLab Username</small></div>
+                     <div class="form-group"><label>Password</label><input type="password" class="form-control" id="gitlab_pass" data-toggle="password"><small 								id="nameHelpBlock" class="form-text text-muted">GitLab Password</small></div><!--TODO: SHOW/HIDE Password-->
+                     <div class="form-group"><label>Token</label><input type="password" class="form-control" id="gitlab_token" data-toggle="password"><small 								id="nameHelpBlock" class="form-text text-muted">GitLab Personal Token</small></div><!--TODO: SHOW/HIDE Token-->
+                  </form>
+                  <div class="btn-bar"><button type="button" class="btn btn-primary" id="add-gitlab">Add GitLab</button></div>
+                  <hr color="green" style="height:1px">
+                  <h4>Key Management</h4>
+                  <h5 class="card-title">Generate Key</h5>
+                  <p>If you do not have a key pair yet, please generate one now.</p>
+                  <form class="form" autocomplete="off">
+                     <div class="form-group"><label>Name</label><input type="text" class="form-control " id="name" aria-describedby="nameHelpBlock" value=""><small 								id="nameHelpBlock" class="form-text text-muted">Full name of the key owner</small></div>
+                     <div class="form-group"><label>Email</label><input type="text" class="form-control " id="email" value=""></div>
+                     <div class="btn-bar"><button type="button" class="btn btn-primary" id="key-generate">Generate Key</button></div>
+                  </form>
+                  <hr>
+                  <h5 class="card-title">Import Key</h5>
+                  <!--p>If you already have a key, please import it either as file or as text.</p-->
+                  <p>If you already have a key, please import it as text.</p>
+                  <div class="tab-content mt-4" id="nav-tabContent">
+                     <div class="tab-pane fade show active">
+                        <form class="form" autocomplete="off">
+                           <!--TODO: Add key upload-->
+                           <!--div class="form-group">
+                              <input type="file" id="input-file" class="file-upload" />
+                           </div-->
+                           <div class="form-group">
+                              <!--span class="form-text mb-1">Import key as text</span-->
+                              <textarea id="newKey" class="form-control" rows="12" spellcheck="false" autocomplete="off" style="width: 100%; font-family: monospace;"></textarea>
+                           </div>
+                           <div class="btn-bar"><button type="button" class="btn btn-primary" id="key-import">Import Key</button></div>
+                        </form>
+                     </div>
+                  </div>
+                  <hr>
+                  </form>
+               </div>
+            </section>
+         </div>
+      </main>
+      <footer class="bg-light">
+         <div class="container d-flex justify-content-between text-muted">
+            <p class="mb-0">© 2019 le-git-imate</p>
+            <p class="social-network">
+               <a class="nav-link" href="https://github.com/le-git-imate/le-git-imate/" target="_blank" rel="noreferrer noopener" tabindex="0"><i class="icon-bg-light icon-github icon-circled icon-2x"></i></a>
+            </p>
+         </div>
+      </footer>
+      <!-- scripts
+         ===========================================-->
+      <script src="setup.js"></script>
+      <script src="../libs/openpgp.js"></script>
+      <script src="../libs/sha1.js"></script>
+      <script src="../config/constants.js"></script>
+      <script src="../utils/util.js"></script>
+      <!-- scripts
+         ===========================================-->
+   </body>
+</html>
