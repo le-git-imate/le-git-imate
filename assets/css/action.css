@@ -1,0 +1,16 @@
+body {
+  font-family: "Times New Roman", Georgia, Serif, 
+  sans-serif, monospace, "Segoe UI", "Lucida Grande", Tahoma;
+  font-size: 100%;
+}
+
+#popup {
+  border-radius: 5px;
+  margin: 20px auto;
+  padding: 20px;
+  position: relative;
+  /*transition: all 5s ease-in-out;*/
+  width: 515px;
+  height: 495px;
+  background: #EFEFEF;
+}

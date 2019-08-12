@@ -1,0 +1,83 @@
+p {
+  font-size:18px;
+}
+
+li {
+  font-size:20px;
+}
+
+li a {
+  font-size:18px;
+}
+
+section {
+  padding-top: 30px;
+}
+
+section h2 {
+  margin-top: 20px;
+}
+
+progress {
+  display: inline-block;
+  vertical-align: baseline;
+}
+
+span {
+  font-size:18px;
+}
+
+body div section p{
+	text-align: justify;
+}
+
+.mv-docs-sidenav {
+  top: 80px;
+  width: 220px;
+}
+
+@media (max-width: 991px) {
+  .affix {
+    position: static;
+  }
+}
+
+.mv-white {
+  background-color: #ffffff;
+}
+
+.mv-button {
+  width: 24px;
+  height: 24px;
+}
+
+.progress {
+  display: flex;
+  overflow: hidden;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  text-align: center;
+  background-color: #eceeef;
+  border-radius: 0.25rem;
+}
+
+.progress-bar {
+  height: 1rem;
+  color: #fff;
+  background-color: #67798d;
+}
+
+.progress-bar-striped {
+  background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+  background-size: 1rem 1rem;
+}
+
+.progress-bar-animated {
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+.img-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

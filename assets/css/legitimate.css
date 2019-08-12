@@ -1,0 +1,28 @@
+.row {
+  margin-bottom: 8px;
+}
+
+.jumbotron h1, .jumbotron h2 {
+  font-family: 'Courgette';
+  font-weight: bold;
+
+}
+
+.mv-header {
+  background-size: cover;
+  background-position: right center;
+}
+
+p {
+  font-size:22px;
+}
+
+li {
+  font-size:20px;
+}
+
+
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}

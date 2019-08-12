@@ -1,0 +1,61 @@
+body {
+  width: 185px;
+  height: 230px;
+  overflow: hidden;
+  font: 200px;
+}
+
+.btn-link .glyphicon {
+  margin-right: 4px;
+}
+
+#options .glyphicon {
+  margin-right: 4px;
+}
+
+.popup {
+  width: 100%;
+  height: 100%;
+  
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: center;
+  align-items: flex-start;
+}
+
+.popupHeader {
+    order: 0;
+    flex: 1 1 50px;
+    align-self: stretch;
+    padding: 2px;
+    min-height: 50px;
+    max-height: 50px;
+}
+
+.popupBody {
+    order: 0;
+    flex: 1 1 auto;
+    align-self: stretch;
+    overflow-y: hidden;
+    padding: 1px;
+    border-bottom: 1px lightgray solid;
+}
+
+.popupFooter {
+    order: 0;
+    flex: 1 1 40px;
+    align-self: stretch;
+    padding: 6px;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+
+.separationLine {
+    border-top: 1px solid lightgrey;
+    padding-top: 1px;
+    padding-left: 1px;
+}
+
