@@ -5,6 +5,7 @@ var xdl_guess_lines = function(mf, sample) {
     var nl = 0,
         size = mf.size,
         tsize = 0;
+
     var data, cur, _top;
 
     data = mf.ptr.reduce(function(acc, value) {
@@ -32,19 +33,16 @@ var xdl_hashbits = function(size) {
 
     /* NOTE, this 8 used to be CHAR_BIT */
     for (; val < size && bits < 8 * 8; val <<= 1, bits++);
-
     return bits ? bits : 1;
 }
 
 
-function xdl_hash_record(i, data, _top, flags) {
+var xdl_hash_record = function(i, data, _top, flags) {
     var ha = 5381;
     var ptr = data;
 
-    //No need to check it
-    //if (flags & XDF_WHITESPACE_FLAGS)
-    //return xdl_hash_record_with_whitespace(data, top, flags);
-
+    // FIXME: if this doesn't work for word-by-word examples
+    // we need to have an offset value in the record object
     for (i; i < _top && ptr[i] != '\n'.charCodeAt(0); i++) {
         ha += (ha << 5);
         ha ^= ptr[i];
@@ -56,8 +54,8 @@ function xdl_hash_record(i, data, _top, flags) {
 
 var xdl_recmatch = function(line, rec) {
 
-    // FIXME: if this doesn't work for word-by-word examples
-    // we need to have an offset value in the record object
+    // FIXME: if this doesn't work for word-by-word examples we need to have an
+    // offset value in the record object.
     for (var i = 0; i < rec.size; i++) {
         if (rec.ptr[i] != line[i])
             return false;
