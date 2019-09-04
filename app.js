@@ -18,23 +18,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 account,
                 repo: urlInfo.repo,
                 server
-            });
+            }, () => {
+                // Call content script to gather UI info
+                let commitType = urlInfo.commitType;
+                getUiInfo({
+                    commitType
+                }, ({
+                    uiInfo
+                }) => {
+                    let requestInfo = {
+                        ...urlInfo,
+                        ...uiInfo
+                    };
 
-            // Call content script to gather UI info
-            let commitType = urlInfo.commitType;
-            getUiInfo({
-                commitType
-            }, ({
-                uiInfo
-            }) => {
-                let requestInfo = {
-                    ...urlInfo,
-                    ...uiInfo
-                };
+                    // Perform the request
+                    performRequest({
+                        requestInfo
+                    });
 
-		// Perform the request
-                performRequest({
-                    requestInfo
                 });
 
             });
@@ -44,5 +45,4 @@ document.addEventListener('DOMContentLoaded', function() {
     // Push new commit to the server
     let push_commit = document.getElementById('push_commit')
     if (push_commit) addEventListener('click', pushCommit);
-		
 });

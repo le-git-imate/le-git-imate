@@ -296,12 +296,13 @@ var storeKey = function(privkey) {
     var crDate = parsedKey[0].crDate;
     var keyId = parsedKey[0].keyId;
     var userId = parsedKey[0].userId;
+    var email = parsedKey[0].email;
 
     // convert iso time to unix time
     crDate = new Date(crDate);
     crDate = crDate.getTime() / 1000;
 
-    storeObject(EXTENSION_ID, [privkey, keyId, crDate]).then(
+    storeObject(EXTENSION_ID, [privkey, keyId, email, crDate]).then(
         (result) => {
             if (result == 0) {
                 //TODO:  display stored keys in a new page
