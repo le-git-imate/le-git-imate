@@ -129,13 +129,13 @@ function dataExtractor_GH(commitType) {
         let prBranch = document.getElementsByClassName(GH_PR_BRANCH);
         prBranch = prBranch[0].innerText;
 
-        let commitDescription = document.getElementById(GH_MERGE_TITLE);
-        commitDescription = commitDescription.value;
+        let commitTitle = document.getElementById(GH_MERGE_TITLE);
+        commitTitle = commitTitle.value;
 
         let commitSummary = document.getElementById(GH_MERGE_MESSAGE);
         commitSummary = commitSummary.value;
 
-        let commitMessage = commitSummary + "\n" + commitDescription;
+        let commitMessage = `${commitTitle}\n\n${commitSummary}`;
 
         return {
             baseBranch,
