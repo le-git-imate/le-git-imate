@@ -218,67 +218,33 @@ function getTreeContent({
 }
 
 
-/*
-// Get the group's member info
-function getGroupMemberInfo({
-    groupId
-}, callback) {
-    let endpoint = `${API_GL}/groups/${groupId}/members`;
-    singleAPICall({
-        endpoint
-    }, ({
-        response
-    }) => {
-        callback({
-            userId: response[0].id,
-            username: response[0].username,
-            userFullname: response[0].name
-        });
-    });
-}
+// Get the GitLab user info
+function getUserInfo_GL(username, callback) {
 
-
-// Get the user email
-function getUserEmail({
-    userId,
-    username
-}, callback) {
     let endpoint = `${API_GL}/users?username=${username}`;
     singleAPICall({
         endpoint
     }, ({
         response
     }) => {
-        let email;
-        if (response[0].hasOwnProperty("email")) {
-            email = response[0].email;
-        } else {
-            email = `${userId}-${username}@users.noreply.gitlab.com`;
-        }
         callback({
-            email
-        });
-    });
-}
-
-
-// Get the user email
-function getUserEmail_GH(user, callback) {
-    let endpoint = `${API_GH}/users/${user}`;
-
-    singleAPICall(endpoint, ({
-        response
-    }) => {
-        let email = response.email;
-        //if the email is null, set it
-        //<user>@users.noreply.github.com
-        if (email === undefined || email === null) {
-            email = user + "@users.noreply.github.com"
-        }
-
-        callback({
-            email
+            name: response[0].name
         })
     });
 }
-*/
+
+
+// Get the GitHub user info
+function getUserInfo(username, callback) {
+
+    let endpoint = `${API_GH}/users/${username}`;
+    singleAPICall({
+        endpoint
+    }, ({
+        response
+    }) => {
+        callback({
+            name: response.name
+        })
+    });
+}

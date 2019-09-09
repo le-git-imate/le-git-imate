@@ -30,34 +30,43 @@ function setConfig({
     server
 }, callback) {
 
-    let email;
     let {
         username,
         password,
         token
     } = account;
 
+    let caller = getUserInfo;
     if (server == SERVER_GH) { //GITHUB
-        email = `${username}@${EMAIL_GH}`;
+        //email = `${username}@${EMAIL_GH}`;
         REPO_API = `${API_GH}/repos/${username}/${repo}`;
         REPO_URL = `${SERVER}/${username}/${repo}`;
     } else { //GITLAB
-        email = `${username}@${EMAIL_GL}`;
+        //email = `${username}@${EMAIL_GL}`;
+        caller = getUserInfo_GL;
         REPO_API = `${API_GL}/projects`;
         //TODO: Remove the need of groups in GitLab
         REPO_URL = `${SERVER}/${GROUP_GL}/${repo}`;
     }
 
+    // TODO: Integrate AUTH and AUTHOR
     AUTH = {
         username,
         password,
         token
-    }
+    };
 
-    AUTHOR = {
+    // form the AUTHOR
+    getAuthorInfo(caller, username, ({
         name,
         email
-    }    
+    }) => {
+        AUTHOR = {
+            name,
+            email
+        }
+        callback();
+    });
 }
 
 
@@ -78,3 +87,22 @@ function checkAccountInfo(callback) {
         });
 }
 
+
+// Retrieve email associated with GPG key
+function getAuthorInfo(caller, username, callback) {
+
+    //get username from the server
+    caller(username, ({
+        name
+    }) => {
+        //get email from the stored gpg key
+        var keyInfo = [];
+        retrieveKey(EXTENSION_ID, keyInfo).then(
+            () => {
+                callback({
+                    name,
+                    email: keyInfo[2]
+                });
+            });
+    });
+}
