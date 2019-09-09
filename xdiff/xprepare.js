@@ -10,7 +10,6 @@ function NCha(icount) {
     this.scurr = 0;
 }
 
-
 function Chanode(next, size) {
     this.next = next;
     this.size = 0;
@@ -89,6 +88,7 @@ var xdl_clean_mmatch = function(dis, i, s, e) {
         else
             break;
     }
+
     /*
      * If the run before the line 'i' found only multimatch lines, we
      * return 0 and hence we don't make the current line (i) discarded.
@@ -106,6 +106,7 @@ var xdl_clean_mmatch = function(dis, i, s, e) {
         else
             break;
     }
+
     /*
      * If the run after the line 'i' found only multimatch lines, we
      * return 0 and hence we don't make the current line (i) discarded.
@@ -130,12 +131,12 @@ var xdl_cleanup_records = function(cf, xdf1, xdf2) {
     var i, nm, nreff, mlim;
     var recs;
     var rcrec;
-    var dis, dis1, dis2; // wat is dis
+    var dis, dis1, dis2;
 
     dis = new Uint8Array(xdf1.nrec + xdf2.nrec + 2);
     dis.fill(0);
 
-    // we turn these into pointers to dis instead
+    // we turn these into pointers to this instead
     dis1 = 0;
     dis2 = dis1 + xdf1.nrec + 1;
 
@@ -180,7 +181,6 @@ var xdl_cleanup_records = function(cf, xdf1, xdf2) {
             xdf2.rchg[i] = 1;
     }
     xdf2.nreff = nreff;
-
     return 0;
 }
 
@@ -216,6 +216,7 @@ var xdl_optimize_ctxs = function(cf, xdf1, xdf2) {
 
     if (xdl_trim_ends(xdf1, xdf2) < 0 ||
         xdl_cleanup_records(cf, xdf1, xdf2) < 0) {
+
         return -1;
     }
 
@@ -251,8 +252,8 @@ var xdl_prepare_ctx = function(pass, mf, narec, xpp, cf, xdf) {
             var hav = res[0];
             i = res[1];
 
-            crec = new createXrecord(xdf.rcha, null,
-                mf.ptr.slice(prev, i + 1), i - prev, hav);
+            crec = new createXrecord(xdf.rcha, null, mf.ptr.slice(prev, i + 1),
+                i - prev, hav);
 
             recs.push(crec);
             nrec++;
@@ -260,11 +261,10 @@ var xdl_prepare_ctx = function(pass, mf, narec, xpp, cf, xdf) {
         }
     }
 
-    rchg = new Uint8Array(nrec + 2);
-    rindex = new Uint32Array(nrec + 1);
     // FIXME: I'm taking these values from MDN
     // but we should be storing these references
-
+    rchg = new Uint8Array(nrec + 2);
+    rindex = new Uint32Array(nrec + 1);
     ha = new Uint32Array(nrec + 1);
 
     xdf.nrec = nrec;
@@ -284,7 +284,6 @@ var xdl_prepare_ctx = function(pass, mf, narec, xpp, cf, xdf) {
 var xdl_prepare_env = function(mf1, mf2, xpp, xe) {
 
     var enl1, enl2, sample;
-
     var cf;
 
     /*
@@ -294,7 +293,7 @@ var xdl_prepare_env = function(mf1, mf2, xpp, xe) {
      * (nrecs) will be updated correctly anyway by
      * xdl_prepare_ctx().
      */
-    sample = 30 /* TODO: XDL_GUESS_NLINES1 **/
+    sample = 30 /* TODO: XDL_GUESS_NLINES1 */
 
     enl1 = xdl_guess_lines(mf1, sample) + 1;
     enl2 = xdl_guess_lines(mf2, sample) + 1;
@@ -348,9 +347,9 @@ var xdl_classify_record = function(pass, cf, rhash, hbits, rec) {
         if (cf.count > cf.alloc) {
             cf.alloc *= 2;
 
-            // FIXME should realloc  or maybe not. We can push in this array struct
+            // FIXME should realloc  or maybe not. We can push in this array struct.
             // if (!(rcrecs = (xdlclass_t **) xdl_realloc(cf.rcrecs, cf.alloc * sizeof(xdlclass_t *))))
-            // 	cf.rcrecs = rcrecs;
+            //cf.rcrecs = rcrecs;
             // TODO: remind myself to simplify the structs later. We don't need all of this alloc clutter
         }
         cf.rcrecs[rcrec.idx] = rcrec;

@@ -12,6 +12,12 @@ createBuffer = function(content) {
 }
 
 
+// Concat array of buffers
+bufferConcat = function (array) {
+    return Buffer.concat(array)
+}
+
+
 // Create tree buffer
 treeObject = function(tree_entries) {
     return Buffer.concat(
