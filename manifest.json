@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "le-git-imate",
   "description": "Sign commits through the GitHub/GitLab web UI",
-  "version": "0.1",
+  "version": "0.1.2",
   "options_page": "config/setup.html",
   "background": {
     "persistent": false,
