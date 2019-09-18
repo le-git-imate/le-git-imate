@@ -14,8 +14,8 @@ function arrayDifference(arr1, arr2) {
 
 
 // Compute the intersect between two arrays
-function arrayIntersect (a, b) {
-	return a.filter(value => -1 !== b.indexOf(value));
+function arrayIntersect(a, b) {
+    return a.filter(value => -1 !== b.indexOf(value));
 }
 
 
@@ -45,6 +45,15 @@ function getValues(dict) {
 }
 
 
+function swapKeyValue(obj) {
+    var result = {};
+    for (var key in obj) {
+        result[obj[key]] = key;
+    }
+    return result;
+}
+
+
 // Remove the first and last slash
 function trimSlash(str) {
     if (str == null) return;
@@ -68,6 +77,39 @@ function untrimPath(fpath) {
 function compareStrings(a, b) {
     // https://stackoverflow.com/a/40355107/2168416
     return -(a < b) || +(a > b)
+}
+
+
+// Find out directories' level
+function getDirLevels(dirs) {
+    /*
+     * Assume dirs are sorted.
+     * Assigning level 0 to the root directory, then:
+     * Directories are seperated by "/", so
+     * Excepting the root level, the number of "/" in level "l" is "l-1"
+     * 0 : [""]
+     * 1 : ["d1", "d2", ...]
+     * 2 : ["d1/d2", "d3/d4", ...]
+     */
+
+    let levels = {};
+
+    if (dirs.length < 1)
+        return levels;
+
+    if (dirs[0] == "") {
+        levels[0] = [""];
+    }
+
+    for (dir of dirs) {
+        let l = dir.split("/").length;
+        if (l in levels == false) {
+            levels[l] = [];
+        }
+        levels[l].push(dir);
+    }
+
+    return levels;
 }
 
 

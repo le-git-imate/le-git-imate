@@ -198,23 +198,58 @@ function compareBranches_GH({
 }
 
 
-// Get the tree content using the tree hash
-function getTreeContent({
-    treeHash,
-    recursive = false
+function getTreeContents({
+    dirs,
+    rootIds,
 }, callback) {
-    // TODO: Handle truncated trees
-    let endpoint = `${REPO_API}/git/trees/${treeHash}`;
-    if (recursive) endpoint += "?recursive=1";
-    singleAPICall({
-        endpoint
-    }, ({
-        response
-    }) => {
-        callback({
-            data: response.tree
-        });
-    });
+	let btrees = {};
+	let ptrees = {};
+
+	// Form tree ids, keep track of branch and directory
+	let treeIds = {
+		base: swapKeyValue(rootIds.base),
+		pr: swapKeyValue(rootIds.pr)
+	}
+
+	//Get dir levels
+	let dirLevels = getDirLevels(dirs);
+	// Get list on involved levels. TODO: Is sort needed?
+	let levels = Object.keys(dirLevels).sort();
+	getTrees({dirLevels, levels, treeIds, btrees, ptrees}, ({btrees, ptrees})=>{
+		callback({btrees, ptrees})
+	});
+}
+
+
+function getTrees({dirLevels, levels, treeIds, btrees, ptrees}, callback){
+	//Get first level treeIds
+	let urls = formTreeUrls(treeIds);
+
+	// Fetch tree contents for PR and base branch
+	multiFetch({
+		urls,
+		parser: treeParser_GH
+	}, ({
+		data
+	}) => {
+		//Add corresponding trees for the current level
+		let baseTrees = getTreesInLevel({ids:treeIds.base, data})
+		let prTrees = getTreesInLevel({ids:treeIds.pr, data})
+		btrees = {...btrees, ...baseTrees};
+		ptrees = {...ptrees, ...prTrees};
+
+		// Check if there is dirs not fetched
+		if (levels.length > 0){
+			//Set current level
+			let cl = levels[0];
+			levels.shift();
+
+			treeIds.base = getTreeIds (dirLevels[cl], btrees);
+			treeIds.pr = getTreeIds (dirLevels[cl], ptrees);
+			getTrees({treeIds, dirLevels, levels, btrees, ptrees}, callback);
+		}else
+			callback({btrees, ptrees});
+	});
 }
 
 

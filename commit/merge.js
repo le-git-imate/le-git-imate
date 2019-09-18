@@ -4,11 +4,12 @@ function doMerge({
     baseInfo,
     runner
 }, callback) {
-    // Call the proper runner to perform basic operations
     let {
         baseBranch,
         prBranch
     } = requestInfo;
+
+    // Call the proper runner to perform basic operations
     runner({
         baseBranch,
         prBranch,
@@ -184,23 +185,17 @@ function githubRunner({
                 mergeInfo
             });
 
-            // Form tree urls that need to be fetched
-            let {
-                urls,
-                treeIds
-            } = formTreeUrls_GH(branchInfo, mergeInfo);
+            let rootIds = {
+                base: {"": mergeInfo.base_commit.commit.tree.sha},
+                pr: {"": branchInfo.commit.tree.sha}
+		//mergeInfo.commits.pop().commit.tree.sha
+            }
 
-            // Fetch tree contents for PR and base branch
-            multiFetch({
-                urls,
-                parser: treeParser_GH
-            }, ({
-                data
-            }) => {
-
-                let btrees = formTreeEntries_GH(data[treeIds.base]);
-                let ptrees = formTreeEntries_GH(data[treeIds.pr]);
-
+            // Get trees that are involved in the commit
+            getTreeContents({
+                dirs,
+                rootIds
+            }, ({btrees, ptrees}) => {
                 // Fetch modified blobs
                 urls = formBlobUrls(parents, modifiedFiles);
                 multiFetch({
