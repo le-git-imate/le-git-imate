@@ -186,13 +186,13 @@ function githubRunner({
             });
 
             let rootIds = {
-                base: {"": mergeInfo.base_commit.commit.tree.sha},
-                pr: {"": branchInfo.commit.tree.sha}
+                base: {[mergeInfo.base_commit.commit.tree.sha] : ""},
+                pr: {[branchInfo.commit.tree.sha] : ""}
 		//mergeInfo.commits.pop().commit.tree.sha
             }
 
             // Get trees that are involved in the commit
-            getTreeContents({
+            getMergeTreeContent({
                 dirs,
                 rootIds
             }, ({btrees, ptrees}) => {

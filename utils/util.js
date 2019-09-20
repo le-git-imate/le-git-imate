@@ -99,6 +99,7 @@ function getDirLevels(dirs) {
 
     if (dirs[0] == "") {
         levels[0] = [""];
+	dirs.shift();
     }
 
     for (dir of dirs) {

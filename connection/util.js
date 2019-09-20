@@ -90,7 +90,10 @@ function formTreeEntries_GL(entries) {
 
 // Form urls for trees need to be fetched (GitLab)
 function formTreeUrls(treeIds) {
-    let ids = [...Object.keys(treeIds.base), ...Object.keys(treeIds.pr)];
+    let ids = Object.keys(treeIds.base);
+    if (treeIds.hasOwnProperty("pr"))
+	ids = [...ids, ...Object.keys(treeIds.pr)];
+
     return treeUrls(ids);
 }
 

@@ -198,58 +198,180 @@ function compareBranches_GH({
 }
 
 
-function getTreeContents({
+// Get the tree content of a branch
+function getTreeContent({
     dirs,
-    rootIds,
+    treeHash
 }, callback) {
-	let btrees = {};
-	let ptrees = {};
+    let btrees = {};
 
-	// Form tree ids, keep track of branch and directory
-	let treeIds = {
-		base: swapKeyValue(rootIds.base),
-		pr: swapKeyValue(rootIds.pr)
-	}
+    // Form tree ids, keep track of branch and directory
+    let treeIds = {
+        base: {
+            [treeHash]: ""
+        }
+    }
 
-	//Get dir levels
-	let dirLevels = getDirLevels(dirs);
-	// Get list on involved levels. TODO: Is sort needed?
-	let levels = Object.keys(dirLevels).sort();
-	getTrees({dirLevels, levels, treeIds, btrees, ptrees}, ({btrees, ptrees})=>{
-		callback({btrees, ptrees})
-	});
+    // Get dir levels, ignore the root level at last index
+    dirs.pop();
+    let dirLevels = getDirLevels(dirs);
+    // Get list on involved levels. TODO: Is sort needed?
+    let levels = Object.keys(dirLevels).sort();
+    getTrees({
+        dirLevels,
+        levels,
+        treeIds,
+        btrees
+    }, ({
+        btrees
+    }) => {
+        callback({
+            trees: btrees
+        });
+    });
 }
 
 
-function getTrees({dirLevels, levels, treeIds, btrees, ptrees}, callback){
-	//Get first level treeIds
-	let urls = formTreeUrls(treeIds);
+// Get the involved trees in a regular commit
+function getTrees({
+    dirLevels,
+    levels,
+    treeIds,
+    btrees
+}, callback) {
+    // Get first level treeIds
+    let urls = formTreeUrls(treeIds);
 
-	// Fetch tree contents for PR and base branch
-	multiFetch({
-		urls,
-		parser: treeParser_GH
-	}, ({
-		data
-	}) => {
-		//Add corresponding trees for the current level
-		let baseTrees = getTreesInLevel({ids:treeIds.base, data})
-		let prTrees = getTreesInLevel({ids:treeIds.pr, data})
-		btrees = {...btrees, ...baseTrees};
-		ptrees = {...ptrees, ...prTrees};
+    // Fetch tree contents for PR and base branch
+    multiFetch({
+        urls,
+        parser: treeParser_GH
+    }, ({
+        data
+    }) => {
+        // Add corresponding trees for the current level
+        let baseTrees = getTreesInLevel({
+            ids: treeIds.base,
+            data
+        })
+        btrees = {
+            ...btrees,
+            ...baseTrees
+        };
 
-		// Check if there is dirs not fetched
-		if (levels.length > 0){
-			//Set current level
-			let cl = levels[0];
-			levels.shift();
+        // Check if there is dirs not fetched
+        if (levels.length > 0) {
+            //Set current level
+            let cl = levels[0];
+            levels.shift();
 
-			treeIds.base = getTreeIds (dirLevels[cl], btrees);
-			treeIds.pr = getTreeIds (dirLevels[cl], ptrees);
-			getTrees({treeIds, dirLevels, levels, btrees, ptrees}, callback);
-		}else
-			callback({btrees, ptrees});
-	});
+            treeIds.base = getTreeIds(dirLevels[cl], btrees);
+            getTrees({
+                treeIds,
+                dirLevels,
+                levels,
+                btrees
+            }, callback);
+        } else {
+            callback({
+                btrees
+            });
+        }
+    });
+}
+
+
+// Get the tree content for both branches
+function getMergeTreeContent({
+    dirs,
+    rootIds
+}, callback) {
+    let btrees = {};
+    let ptrees = {};
+
+    // Get dir levels, ignore the root level at first index
+    dirs.shift();
+    let dirLevels = getDirLevels(dirs);
+    // Get list on involved levels. TODO: Is sort needed?
+    let levels = Object.keys(dirLevels).sort();
+
+    // Get trees
+    getMergeTrees({
+        dirLevels,
+        levels,
+        treeIds: rootIds,
+        btrees,
+        ptrees
+    }, ({
+        btrees,
+        ptrees
+    }) => {
+        callback({
+            btrees,
+            ptrees
+        });
+    });
+}
+
+
+// Get the involved trees in a merge commit
+function getMergeTrees({
+    dirLevels,
+    levels,
+    treeIds,
+    btrees,
+    ptrees
+}, callback) {console.log(levels, dirLevels)
+    // Get first level treeIds
+    let urls = formTreeUrls(treeIds);
+
+    // Fetch tree contents for PR and base branch
+    multiFetch({
+        urls,
+        parser: treeParser_GH
+    }, ({
+        data
+    }) => {
+        // Add corresponding trees for the current level
+        let baseTrees = getTreesInLevel({
+            ids: treeIds.base,
+            data
+        })
+        let prTrees = getTreesInLevel({
+            ids: treeIds.pr,
+            data
+        })
+        btrees = {
+            ...btrees,
+            ...baseTrees
+        };
+        ptrees = {
+            ...ptrees,
+            ...prTrees
+        };
+
+        // Check if there is dirs not fetched
+        if (levels.length > 0) {
+            //Set current level
+            let cl = levels[0];
+            levels.shift();
+
+            treeIds.base = getTreeIds(dirLevels[cl], btrees);
+            treeIds.pr = getTreeIds(dirLevels[cl], ptrees);
+            getMergeTrees({
+                treeIds,
+                dirLevels,
+                levels,
+                btrees,
+                ptrees
+            }, callback);
+        } else {
+            callback({
+                btrees,
+                ptrees
+            });
+        }
+    });
 }
 
 
@@ -264,7 +386,7 @@ function getUserInfo_GL(username, callback) {
     }) => {
         callback({
             name: response[0].name
-        })
+        });
     });
 }
 
