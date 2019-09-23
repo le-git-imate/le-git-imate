@@ -82,7 +82,7 @@ function gitlabRunner({
 
         // FIXME: Take car of mergediff=[]
         // When a user creates a PR with several commits,
-	// and at the end nothing has changes or diff = []
+        // and at the end nothing has changes or diff = []
 
         // Differentiate changed blobs
         let {
@@ -193,7 +193,11 @@ function githubRunner({
              * Thus, we ignore the last dir in dirs
              */
             let parentdirs = dirs.slice(0, dirs.length - 1)
-            let urls = formDirUrls(baseBranch, prBranch, parentdirs);
+            let urls = formDirUrls({
+                baseBranch,
+                prBranch,
+                dirs: parentdirs
+            });
 
             // Get treeIds that need to be fetched 
             multiFetch({
@@ -202,11 +206,16 @@ function githubRunner({
             }, ({
                 data
             }) => {
-                let baseIds = formTreeIdUrls(dirs, baseBranch, data[baseBranch]);
-                let prIds = formTreeIdUrls(dirs, prBranch, data[prBranch]);
-                treeIds = {
-                    ...baseIds,
-                    ...prIds
+                //Check if there is any fetched tree Ids
+                //There is no one (data=={}), if the change is in the root level 
+                let treeIds = {};
+                if (Object.keys(data).length > 0) {
+                    let baseIds = formTreeIdUrls(dirs, baseBranch, data[baseBranch]);
+                    let prIds = formTreeIdUrls(dirs, prBranch, data[prBranch]);
+                    treeIds = {
+                        ...baseIds,
+                        ...prIds
+                    }
                 }
 
                 // Add root level treeIds
@@ -220,13 +229,18 @@ function githubRunner({
                 };
 
                 // Get the needed trees per branch
-                getMergeTrees({
+                getTrees({
                     treeIds
                 }, (data) => {
                     let {
                         btrees,
                         ptrees
-                    } = mapTrees({baseBranch, prBranch, treeIds, data});
+                    } = mapTrees({
+                        baseBranch,
+                        prBranch,
+                        treeIds,
+                        data
+                    });
 
                     // Fetch modified blobs
                     urls = formBlobUrls(parents, modifiedFiles);
@@ -256,11 +270,11 @@ function githubRunner({
 
 
 /**
-* Differentiate blobs for gitlab request:
-* - added
-* - deleted
-* - modified
-**/
+ * Differentiate blobs for gitlab request:
+ * - added
+ * - deleted
+ * - modified
+ **/
 function differentiateBlobs_GL(blobs) {
 
     let addedFiles = [];
@@ -293,12 +307,12 @@ function differentiateBlobs_GL(blobs) {
 }
 
 /**
-* Differentiate blobs for github request:
-* - added
-* - deleted
-* - modified
-**/
-function differentiateBlobs_GH (blobs){
+ * Differentiate blobs for github request:
+ * - added
+ * - deleted
+ * - modified
+ **/
+function differentiateBlobs_GH(blobs) {
 
     let addedFiles = [];
     let deletedFiles = [];

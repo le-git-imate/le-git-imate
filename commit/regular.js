@@ -57,8 +57,9 @@ function fetchTrees({
     //GitHub: get trees by id
     if (SERVER == SERVER_GH) {
         getTreeContent({
-                treeHash,
-                dirs
+		branch,
+		dirs,
+		treeHash
             },
             ({
                 trees

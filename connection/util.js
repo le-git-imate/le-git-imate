@@ -106,13 +106,13 @@ function formTreeEntries_GL(entries) {
 
 
 // Form urls for trees need to be fetched (GitHub)
-function formDirUrls(baseBranch, prBranch, dirs) {
-    let trees = {
-        base: dirUrls(baseBranch, dirs),
-        pr: dirUrls(prBranch, dirs),
-    }
+function formDirUrls({baseBranch, prBranch, dirs}) {
+    let trees = dirUrls(baseBranch, dirs)
+    //Check for pr branch
+    if (prBranch !== undefined)
+	trees = [...trees, ...dirUrls(prBranch, dirs)];
 
-    return [...trees.base, ...trees.pr];
+    return trees;
 }
 
 
@@ -187,9 +187,15 @@ function mapTrees({
     data
 }) {
     let trees = {
-        [baseBranch]: {},
-        [prBranch]: {}
+        [baseBranch]: {}
     };
+
+    // In case of regular commit, we define an empty prBranch
+    // TODO: Make it better
+    if (prBranch !== undefined)
+        trees[prBranch] = {}
+    else
+        prBranch = "Not defined";
 
     for (let id in treeIds) {
         let {

@@ -200,7 +200,7 @@ function compareBranches_GH({
 
 
 // Get the involved trees in a merge commit
-function getMergeTrees({
+function getTrees({
     treeIds
 }, callback) {
 
@@ -219,6 +219,62 @@ function getMergeTrees({
 
 
 // Get the tree content of a branch
+function getTreeContent({
+    branch,
+    dirs,
+    treeHash
+}, callback) {
+
+    /*
+     * Form dir urls invovled in the commit
+     * First, get corresponding treeIds
+     * Each id is searched in the parent dirs
+     * e.g.: corresponding treeId of ./d1/d2 is in tree entries of ./d1
+     * Thus, we ignore the last dir in dirs
+     */
+    let parentdirs = dirs.slice(0, dirs.length - 1)
+    let urls = formDirUrls({baseBranch: branch, dirs: parentdirs});
+
+    // Get treeIds that need to be fetched 
+    multiFetch({
+        urls,
+        parser: dirParser
+    }, ({
+        data
+    }) => {
+	let treeIds = {};
+	if (Object.keys(data).length > 0){
+        	treeIds = formTreeIdUrls(dirs, branch, data[branch]);
+	}
+
+        // Add root level treeIds
+        treeIds[treeHash] = {
+            ref: branch,
+            path: ""
+        };
+
+        // Get the needed trees per branch
+        getTrees({
+            treeIds
+        }, (data) => {
+            let {
+                btrees
+            } = mapTrees({
+                baseBranch:branch,
+                treeIds,
+                data
+            });
+
+            callback({
+                trees: btrees
+            });
+        });
+    });
+
+}
+
+
+/*/ Get the tree content of a branch
 function getTreeContent({
     dirs,
     treeHash
@@ -298,7 +354,7 @@ function getTrees({
             });
         }
     });
-}
+}*/
 
 
 // Get the GitLab user info
