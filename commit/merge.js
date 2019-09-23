@@ -185,37 +185,70 @@ function githubRunner({
                 mergeInfo
             });
 
-            let rootIds = {
-                base: {[mergeInfo.base_commit.commit.tree.sha] : ""},
-                pr: {[branchInfo.commit.tree.sha] : ""}
-		//mergeInfo.commits.pop().commit.tree.sha
-            }
+            /*
+             * Form dir urls invovled in the commit
+             * First, get corresponding treeIds
+             * Each id is searched in the parent dirs
+             * e.g.: corresponding treeId of ./d1/d2 is in tree entries of ./d1
+             * Thus, we ignore the last dir in dirs
+             */
+            let parentdirs = dirs.slice(0, dirs.length - 1)
+            let urls = formDirUrls(baseBranch, prBranch, parentdirs);
 
-            // Get trees that are involved in the commit
-            getMergeTreeContent({
-                dirs,
-                rootIds
-            }, ({btrees, ptrees}) => {
-                // Fetch modified blobs
-                urls = formBlobUrls(parents, modifiedFiles);
-                multiFetch({
-                        urls,
-                        parser: blobParser
-                    },
-                    ({
-                        data
-                    }) => {
-                        callback({
-                            dirs,
-                            parents,
-                            btrees,
-                            ptrees,
-                            blobs: data,
-                            addedFiles,
-                            deletedFiles,
-                            modifiedFiles
+            // Get treeIds that need to be fetched 
+            multiFetch({
+                urls,
+                parser: dirParser
+            }, ({
+                data
+            }) => {
+                let baseIds = formTreeIdUrls(dirs, baseBranch, data[baseBranch]);
+                let prIds = formTreeIdUrls(dirs, prBranch, data[prBranch]);
+                treeIds = {
+                    ...baseIds,
+                    ...prIds
+                }
+
+                // Add root level treeIds
+                treeIds[mergeInfo.base_commit.commit.tree.sha] = {
+                    ref: baseBranch,
+                    path: ""
+                };
+                treeIds[branchInfo.commit.tree.sha] = {
+                    ref: prBranch,
+                    path: ""
+                };
+
+                // Get the needed trees per branch
+                getMergeTrees({
+                    treeIds
+                }, (data) => {
+                    let {
+                        btrees,
+                        ptrees
+                    } = mapTrees({baseBranch, prBranch, treeIds, data});
+
+                    // Fetch modified blobs
+                    urls = formBlobUrls(parents, modifiedFiles);
+                    multiFetch({
+                            urls,
+                            parser: blobParser
+                        },
+                        ({
+                            data
+                        }) => {
+                            callback({
+                                dirs,
+                                parents,
+                                btrees,
+                                ptrees,
+                                blobs: data,
+                                addedFiles,
+                                deletedFiles,
+                                modifiedFiles
+                            });
                         });
-                    });
+                });
             });
         });
     });

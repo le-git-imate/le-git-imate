@@ -72,10 +72,27 @@ function treeUrls_GL(branch, dirs) {
 }
 
 
+// Extract the fpath and ref name of fetched trees
+function treeParser_GL({
+    item,
+    info,
+    data
+}) {
+
+    let key = extractBetween(item, "?ref=", "&path=");
+    let ref = untrimPath(extractAfter(item, "&path="));
+
+    // Initialize sub-object, otherwise you'll get errors
+    if (key in data == false) {
+        data[key] = {};
+    }
+
+    data[key][ref] = formTreeEntries_GL(info);
+}
+
 
 //Form retrieved tree entries (GitLab)
 function formTreeEntries_GL(entries) {
-
     let trees = {};
     for (let entry of entries) {
         // Omit the first char of the tree mode
@@ -88,11 +105,151 @@ function formTreeEntries_GL(entries) {
 }
 
 
+// Form urls for trees need to be fetched (GitHub)
+function formDirUrls(baseBranch, prBranch, dirs) {
+    let trees = {
+        base: dirUrls(baseBranch, dirs),
+        pr: dirUrls(prBranch, dirs),
+    }
+
+    return [...trees.base, ...trees.pr];
+}
+
+
+function dirUrls(branch, dirs) {
+    let urls = [];
+    let endpoint = `${REPO_API}/contents`;
+    for (let dir of dirs) {
+        urls.push(`${endpoint}/${dir}?ref=${branch}`);
+    }
+
+    return urls;
+}
+
+
+// Extract the fpath and ref name of fetched trees
+function dirParser({
+    item,
+    info,
+    data
+}) {
+    //Check if info is Non-Array, means it is Not found
+    if (info.constructor !== Array)
+        return;
+    //Check if info has at least one entry
+    if (info.length < 1)
+        return;
+
+    let ref = extractAfter(item, "?ref=");
+    let dpath = extractBetween(item, "/contents/", "?ref=");
+    if (ref in data == false) {
+        data[ref] = {};
+    }
+
+    //data [ref][dpath] = formTreeIdEntries(info);
+    data[ref] = {
+        ...data[ref],
+        ...formDirEntries(info)
+    };
+}
+
+
+// Form treeId urls
+function formTreeIdUrls(dirs, branch, info) {
+    let ids = {};
+    for (let dir of dirs) {
+        if (info.hasOwnProperty(dir)) {
+            // Assumption: Git Objects are uniq:)
+            ids[info[dir].sha] = {
+                ref: branch,
+                path: dir
+            };
+        }
+    }
+
+    return ids;
+}
+
+
+// Extract the fpath and ref name of fetched trees
+function treeParser_GH({
+    info,
+    data
+}) {
+    data[info.sha] = info.tree;
+}
+
+
+function mapTrees({
+    baseBranch,
+    prBranch,
+    treeIds,
+    data
+}) {
+    let trees = {
+        [baseBranch]: {},
+        [prBranch]: {}
+    };
+
+    for (let id in treeIds) {
+        let {
+            ref,
+            path
+        } = treeIds[id];
+        trees[ref][path] = formTreeEntries(data[id]);
+    }
+
+    return {
+        btrees: trees[baseBranch],
+        ptrees: trees[prBranch]
+    }
+}
+
+
+// Form retrieved tree entries (GitHub)
+function formDirEntries(entries) {
+    let trees = {};
+    for (let entry of entries) {
+        //let name = entry.name;
+        let path = entry.path;
+        trees[path] = entry;
+    }
+
+    return trees;
+}
+
+
+// Form retrieved tree entries (GitHub)
+function formTreeEntries(entries) {
+    let trees = {}
+    for (let entry of entries) {
+
+        // Omit the first char of the tree mode
+	let mode = entry.mode;
+	entry.mode = mode == "040000" ? "40000" : mode;
+
+	//TODO: Make entry names consistent with GitLab
+        // Rename sha with id
+        entry["id"] = entry.sha;
+        delete entry["sha"];
+
+        // Rename path with name
+        let path = entry.path;;
+        entry["name"] = path;
+        delete entry["path"];
+
+        trees[path] = entry;
+    }
+
+    return trees;
+}
+
+
 // Form urls for trees need to be fetched (GitLab)
 function formTreeUrls(treeIds) {
     let ids = Object.keys(treeIds.base);
     if (treeIds.hasOwnProperty("pr"))
-	ids = [...ids, ...Object.keys(treeIds.pr)];
+        ids = [...ids, ...Object.keys(treeIds.pr)];
 
     return treeUrls(ids);
 }
@@ -123,7 +280,7 @@ function getTreesInLevel({
     for (let id of Object.keys(ids)) {
         trees = {
             ...trees,
-            ...formTreeEntries_GH(ids[id], data[id])
+            ...formTreeEntries(ids[id], data[id])
         };
     }
 
@@ -145,33 +302,6 @@ function getTreeIds(dirs, trees) {
     }
 
     return treeIds
-}
-
-
-// Form retrieved tree entries (GitHub)
-function formTreeEntries_GH(parent, entries) {
-    let trees = {}
-    for (let entry of entries) {
-        let path = entry.path;
-        //let parent = getParentPath(path);
-        let name = removeParentPath(path);
-
-        if (parent in trees == false) {
-            trees[parent] = {};
-        }
-
-        // Add entry name, rename sha with id
-        entry["name"] = name;
-        entry["id"] = entry.sha;
-        delete entry["sha"];
-
-        // Omit the first char of the tree mode
-        let mode = entry.mode;
-        entry.mode = mode == "040000" ? "40000" : mode;
-        trees[parent][name] = entry;
-    }
-
-    return trees;
 }
 
 
@@ -273,32 +403,4 @@ function blob_GH({
         ref,
         content: atob(info.content)
     }
-}
-
-
-// Extract the fpath and ref name of fetched trees
-function treeParser_GL({
-    item,
-    info,
-    data
-}) {
-
-    let key = extractBetween(item, "?ref=", "&path=");
-    let ref = untrimPath(extractAfter(item, "&path="));
-
-    // Initialize sub-object, otherwise you'll get errors
-    if (key in data == false) {
-        data[key] = {};
-    }
-
-    data[key][ref] = formTreeEntries_GL(info);
-}
-
-
-// Extract the fpath and ref name of fetched trees
-function treeParser_GH({
-    info,
-    data
-}) {
-    data[info.sha] = info.tree;
 }
