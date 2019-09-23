@@ -112,7 +112,6 @@ var discover = async function({
             throw new Error(
                 `HTTP Error: ${res.statusCode} ${res.statusMessage}`)
         }
-        //console.log(res.body)
         //parse the response and then callback
         callback(parseGetResponse(res.body, service))
     });
@@ -139,7 +138,6 @@ var connect = async function({
     }
 
     let conStream = concatStreamBuffer(stream)
-    //console.log(headers, conStream)
     pifyRequest("POST", `${repo_url}/${service}`,
         headers, conStream,
         function(res) {

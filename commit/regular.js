@@ -55,17 +55,17 @@ function fetchTrees({
 }, callback) {
 
     //GitHub: get trees by id
-    //TODO: Do not use recursive option
     if (SERVER == SERVER_GH) {
         getTreeContent({
-                treeHash,
-                recursive: true
+		branch,
+		dirs,
+		treeHash
             },
             ({
-                data
+                trees
             }) => {
                 callback({
-                    trees: formTreeEntries_GH(data)
+                    trees
                 });
             });
     } //GitLab: get trees by path

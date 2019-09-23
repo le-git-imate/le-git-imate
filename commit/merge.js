@@ -4,11 +4,12 @@ function doMerge({
     baseInfo,
     runner
 }, callback) {
-    // Call the proper runner to perform basic operations
     let {
         baseBranch,
         prBranch
     } = requestInfo;
+
+    // Call the proper runner to perform basic operations
     runner({
         baseBranch,
         prBranch,
@@ -81,7 +82,7 @@ function gitlabRunner({
 
         // FIXME: Take car of mergediff=[]
         // When a user creates a PR with several commits,
-	// and at the end nothing has changes or diff = []
+        // and at the end nothing has changes or diff = []
 
         // Differentiate changed blobs
         let {
@@ -184,43 +185,84 @@ function githubRunner({
                 mergeInfo
             });
 
-            // Form tree urls that need to be fetched
-            let {
-                urls,
-                treeIds
-            } = formTreeUrls_GH(branchInfo, mergeInfo);
+            /*
+             * Form dir urls invovled in the commit
+             * First, get corresponding treeIds
+             * Each id is searched in the parent dirs
+             * e.g.: corresponding treeId of ./d1/d2 is in tree entries of ./d1
+             * Thus, we ignore the last dir in dirs
+             */
+            let parentdirs = dirs.slice(0, dirs.length - 1)
+            let urls = formDirUrls({
+                baseBranch,
+                prBranch,
+                dirs: parentdirs
+            });
 
-            // Fetch tree contents for PR and base branch
+            // Get treeIds that need to be fetched 
             multiFetch({
                 urls,
-                parser: treeParser_GH
+                parser: dirParser
             }, ({
                 data
             }) => {
+                //Check if there is any fetched tree Ids
+                //There is no one (data=={}), if the change is in the root level 
+                let treeIds = {};
+                if (Object.keys(data).length > 0) {
+                    let baseIds = formTreeIdUrls(dirs, baseBranch, data[baseBranch]);
+                    let prIds = formTreeIdUrls(dirs, prBranch, data[prBranch]);
+                    treeIds = {
+                        ...baseIds,
+                        ...prIds
+                    }
+                }
 
-                let btrees = formTreeEntries_GH(data[treeIds.base]);
-                let ptrees = formTreeEntries_GH(data[treeIds.pr]);
+                // Add root level treeIds
+                treeIds[mergeInfo.base_commit.commit.tree.sha] = {
+                    ref: baseBranch,
+                    path: ""
+                };
+                treeIds[branchInfo.commit.tree.sha] = {
+                    ref: prBranch,
+                    path: ""
+                };
 
-                // Fetch modified blobs
-                urls = formBlobUrls(parents, modifiedFiles);
-                multiFetch({
-                        urls,
-                        parser: blobParser
-                    },
-                    ({
+                // Get the needed trees per branch
+                getTrees({
+                    treeIds
+                }, (data) => {
+                    let {
+                        btrees,
+                        ptrees
+                    } = mapTrees({
+                        baseBranch,
+                        prBranch,
+                        treeIds,
                         data
-                    }) => {
-                        callback({
-                            dirs,
-                            parents,
-                            btrees,
-                            ptrees,
-                            blobs: data,
-                            addedFiles,
-                            deletedFiles,
-                            modifiedFiles
-                        });
                     });
+
+                    // Fetch modified blobs
+                    urls = formBlobUrls(parents, modifiedFiles);
+                    multiFetch({
+                            urls,
+                            parser: blobParser
+                        },
+                        ({
+                            data
+                        }) => {
+                            callback({
+                                dirs,
+                                parents,
+                                btrees,
+                                ptrees,
+                                blobs: data,
+                                addedFiles,
+                                deletedFiles,
+                                modifiedFiles
+                            });
+                        });
+                });
             });
         });
     });
@@ -228,11 +270,11 @@ function githubRunner({
 
 
 /**
-* Differentiate blobs for gitlab request:
-* - added
-* - deleted
-* - modified
-**/
+ * Differentiate blobs for gitlab request:
+ * - added
+ * - deleted
+ * - modified
+ **/
 function differentiateBlobs_GL(blobs) {
 
     let addedFiles = [];
@@ -265,12 +307,12 @@ function differentiateBlobs_GL(blobs) {
 }
 
 /**
-* Differentiate blobs for github request:
-* - added
-* - deleted
-* - modified
-**/
-function differentiateBlobs_GH (blobs){
+ * Differentiate blobs for github request:
+ * - added
+ * - deleted
+ * - modified
+ **/
+function differentiateBlobs_GH(blobs) {
 
     let addedFiles = [];
     let deletedFiles = [];
