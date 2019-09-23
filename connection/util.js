@@ -277,40 +277,6 @@ function treeUrls(ids) {
 }
 
 
-// Get all trees in one level (GitHub)
-function getTreesInLevel({
-    ids,
-    data
-}) {
-    let trees = {}
-    for (let id of Object.keys(ids)) {
-        trees = {
-            ...trees,
-            ...formTreeEntries(ids[id], data[id])
-        };
-    }
-
-    return trees;
-}
-
-
-// Get corresponding treeId for a directory (GitHub)
-function getTreeIds(dirs, trees) {
-    let treeIds = {};
-    for (let dpath of dirs) {
-        let parent = getParentPath(dpath);
-        let dir = removeParentPath(dpath);
-        if (trees[parent].hasOwnProperty(dir)) {
-            // Assume that Git Objects are uniq:)
-            treeIds[trees[parent][dir].id] = dpath;
-            //treeIds[dir] = trees[parent][dir].id;
-        }
-    }
-
-    return treeIds
-}
-
-
 // Form urls for all files need to be fetched 
 function formBlobUrls(parents, blobs) {
 
