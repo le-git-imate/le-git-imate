@@ -12,7 +12,7 @@ function setServer(url) {
         SERVER = SERVER_GH;
     } else if (url.startsWith(SERVER_GL)) {
         SERVER = SERVER_GL;
-	GROUP_GL = url.replace(`${SERVER}`, "").split("/")[1]
+        GROUP_GL = url.replace(`${SERVER}`, "").split("/")[1]
     } else {
         deactivate({
             rule: UNKNOWN_SERVER
@@ -23,18 +23,39 @@ function setServer(url) {
 }
 
 
+// Check if the account info is available
+function checkAccountInfo({
+    username
+}, callback) {
+    let id = SERVER == SERVER_GH ? USER_GH : USER_GL;
+    retrieveObject(id).then(
+        (users) => {
+            let credentials = users[username];
+            if (!credentials) {
+                return errorHandler({
+                    msg: `The extension does not have access to \"${
+			username}\" account's credentials on the \"${SERVER}\" server`,
+                    err: true
+                });
+            } else {
+                callback(credentials);
+            }
+        });
+}
+
+
 // Get basic info about the request
 function setConfig({
-    account,
+    username,
+    credentials,
     repo,
     server
 }, callback) {
 
     let {
-        username,
         password,
         token
-    } = account;
+    } = credentials;
 
     let caller = getUserInfo;
     if (server == SERVER_GH) { //GITHUB
@@ -67,24 +88,6 @@ function setConfig({
         }
         callback();
     });
-}
-
-
-// Check if the account info is available
-function checkAccountInfo(callback) {
-    let id = SERVER == SERVER_GH ? USER_GH : USER_GL;
-    retrieveObject(id).then(
-        (account) => {
-            if (!account) {
-                //TODO: check if the current user (from url) is added
-                return errorHandler({
-                    msg: `Account for the server \"${SERVER}\" is not set!`,
-                    err: true
-                });
-            } else {
-                callback(account);
-            }
-        });
 }
 
 

@@ -10,12 +10,15 @@ document.addEventListener('DOMContentLoaded', function() {
         let urlInfo = parseURL(url);
         if (urlInfo == UNKNOWN_REQUEST) return;
 
-        // Check for account info
-        checkAccountInfo((account) => {
-
+        // Check for the account info
+	let username = urlInfo.user
+        checkAccountInfo({
+            username: urlInfo.user
+        }, (credentials) => {
             // Set basic config
             setConfig({
-                account,
+                username,
+                credentials,
                 repo: urlInfo.repo,
                 server
             }, () => {
@@ -35,9 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     performRequest({
                         requestInfo
                     });
-
                 });
-
             });
         });
     });
