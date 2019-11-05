@@ -37,6 +37,33 @@ function signContent(data, callback) {
         });
 }
 
+function tokenGeneration (username, password){
+  let headers = {}
+  let auth = {
+    username:username,
+    password:password
+  };
+  headers['Authorization'] = basicAuth(auth)
+  headers['Content-Type'] = 'application/json'
+  headers['accept'] = 'application/json'
+  let method = "POST"
+  let url = "https://api.github.com/authorizations"
+  let body = JSON.stringify({
+    "scopes": ["repo", "write:packages", "read:packages"],
+    "note": EXTENSION_ID
+  })
+
+  request(method, url, headers, body, function(res) {
+    let token = (JSON.parse(res.body))['token'];
+    storeAccounts({
+        server: GITHUB,
+        password,
+        token,
+        username,
+        userTag: USER_GH,
+    });
+  })
+}
 
 // Store account info
 function storeAccounts({
@@ -71,22 +98,15 @@ function storeAccounts({
 // Store user info for github
 function setGHAccount() {
     let username = document.getElementById(USER_GH).value;
-    let token = document.getElementById(TOKEN_GH).value;
     let password = document.getElementById(PASS_GH).value;
+
+    tokenGeneration(username, password);
 
     /*//TODO: validate user, pass, and token
     if (!validatePattern(REGEX_USER_GH, username)) {
     	return errorHandler({msg: "username is not valid!", err:true});
     }
     //Check if credentials are valid*/
-
-    storeAccounts({
-        server: GITHUB,
-        password,
-        token,
-        username,
-        userTag: USER_GH,
-    });
 }
 
 
