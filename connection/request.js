@@ -3,7 +3,6 @@ function basicAuth(auth) {
     return "Basic " + btoa(auth.username + ':' + auth.password)
 }
 
-
 // Create pify request
 function pifyRequest(method, repo_url, headers, body, callback) {
 
@@ -101,11 +100,7 @@ var discover = async function({
 
     if (!repo_url.endsWith('.git')) repo_url = repo_url += '.git';
     repo_url = `${repo_url}/info/refs?service=${service}`;
-
     let headers = {}
-    if (auth) {
-        headers['Authorization'] = basicAuth(auth)
-    }
 
     request(method, repo_url, headers, function(res) {
         if (res.statusCode !== 200) {
@@ -133,10 +128,6 @@ var connect = async function({
     let headers = {}
     headers['Content-Type'] = `application/x-${service}-request`
     headers['Accept'] = `application/x-${service}-result`
-
-    if (auth) {
-        headers['Authorization'] = basicAuth(auth)
-    }
 
     let conStream = concatStreamBuffer(stream)
     //console.log(headers, conStream)

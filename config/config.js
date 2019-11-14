@@ -40,7 +40,8 @@ function setConfig({
     if (server == SERVER_GH) { //GITHUB
         //email = `${username}@${EMAIL_GH}`;
         REPO_API = `${API_GH}/repos/${username}/${repo}`;
-        REPO_URL = `${SERVER}/${username}/${repo}`;
+        //REPO_URL = `${SERVER}/${username}/${repo}`;
+        REPO_URL = "https://"+token+"@github.com"+`/${username}/${repo}`;
     } else { //GITLAB
         //email = `${username}@${EMAIL_GL}`;
         caller = getUserInfo_GL;
