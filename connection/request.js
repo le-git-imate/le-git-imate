@@ -104,7 +104,7 @@ var discover = async function({
 
     let headers = {}
     if (auth) {
-        headers['Authorization'] = basicAuth(auth)
+        headers['Authorization'] = "Basic " + btoa(auth.username + ':' + auth.token)
     }
 
     request(method, repo_url, headers, function(res) {
@@ -135,7 +135,7 @@ var connect = async function({
     headers['Accept'] = `application/x-${service}-result`
 
     if (auth) {
-        headers['Authorization'] = basicAuth(auth)
+        headers['Authorization'] = "Basic " + btoa(auth.username + ':' + auth.token)
     }
 
     let conStream = concatStreamBuffer(stream)
