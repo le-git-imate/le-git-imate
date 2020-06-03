@@ -238,3 +238,9 @@ function errorHandler({
     	}*/
     //TODO: Add a better handler
 }
+
+
+// Proxify URL to enable CORS automatically
+function corsProxify(url) {
+    return `${CORSPROXY}/${url.replace(/^https?:\/\//, '')}`
+}

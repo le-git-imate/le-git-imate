@@ -112,7 +112,7 @@ var discover = async function({
             throw new Error(
                 `HTTP Error: ${res.statusCode} ${res.statusMessage}`)
         }
-        //console.log(res.body)
+
         //parse the response and then callback
         callback(parseGetResponse(res.body, service))
     });
