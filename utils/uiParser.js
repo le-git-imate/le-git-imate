@@ -22,23 +22,34 @@ var getUiInfo = async function({
 // Parse url to get the commit info
 function parseURL(url) {
 
-    /** URL pattern in GitHub:GitLab
+    /** URL pattern in GitHub
      * new:	<SERVER>/<user>/<repo>/new/<branch>/<fpath>
      * edit:	<SERVER>/<user>/<repo>/edit/<branch>/<fpath>
-     * delete:	<SERVER>/<user>/<repo>/delete:blob/<branch>/<fpath>
-     * upload:	<SERVER>/<user>/<repo>/upload:tree/<branch>/<fpath> 
-     * merge:	<SERVER>/<user>/<repo>/pull:merge_requests/<pr#>
+     * delete:	<SERVER>/<user>/<repo>/delete/<branch>/<fpath>
+     * upload:	<SERVER>/<user>/<repo>/upload/<branch>/<fpath>
+     * merge:	<SERVER>/<user>/<repo>/pull/<pr#>
+     **/
+
+    /** URL pattern in GitLab
+     * new:	<SERVER>/<user>/<repo>/-/new/<branch>/<fpath>
+     * edit:	<SERVER>/<user>/<repo>/-/edit/<branch>/<fpath>
+     * delete:	<SERVER>/<user>/<repo>/-/blob/<branch>/<fpath>
+     * upload:	<SERVER>/<user>/<repo>/-/tree/<branch>/<fpath>
+     * merge:	<SERVER>/<user>/<repo>/-/merge_requests/<pr#>
      **/
 
     let info = url.replace(`${SERVER}`, "").split("/");
 
-    // RULE: requests on the main page are ignored
+    // The extension does not work on the main page of repo
     if (info.length < 4) {
         deactivate({
             rule: UNKNOWN_REQUEST
         });
         return UNKNOWN_REQUEST;
     }
+
+    // Remove an extra element (i.e. "-") from the GitLab url
+    if (SERVER = SERVER_GL) info.splice(3,1);
 
     let commitType = info[3];
     let baseBranch = null;
