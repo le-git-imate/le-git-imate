@@ -187,11 +187,15 @@ function pushCommit() {
     var newHead = binary.id
     finalObjects.push([type, binary.object]);
 
+    //proxify URL for GitHub
+    var repo_url = REPO_URL
+    if (SERVER == SERVER_GH) repo_url = corsProxify(repo_url);
+
     //call send-pack process and then parse the server response
     sendPackLine({
             auth: AUTH,
             branch: commitInfo.baseBranch,
-            repo_url: REPO_URL,
+            repo_url,
             newHead,
             objects: finalObjects
         },

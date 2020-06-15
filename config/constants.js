@@ -45,6 +45,9 @@ const PGP_END = "-----END PGP SIGNATURE-----";
 const RPACK = "git-receive-pack";
 const UPACK = "git-upload-pack";
 
+//CORS Proxy Server
+const CORSPROXY = "https://cors.isomorphic-git.org";
+
 // TODO: Put a comprehensive regex in place 
 const REGEX_EMAIL =
     /^[+a-zA-Z0-9_.!#$%&'*\/=?^`{|}~-]+@([a-zA-Z0-9-]+\.)+[a-zA-Z0-9]{2,63}$/;
