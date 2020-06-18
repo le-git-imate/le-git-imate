@@ -47,24 +47,31 @@ function storeAccounts({
     userTag
 }) {
 
-    storeObject(userTag, {
-        username,
-        password,
-        token
-    }).then(
-        (result) => {//TODO: Display stored keys in a new page
-            if (result == 0) {
-                var msg = `Account information for the ${server} user \"${username}\" is successfully imported.`
-                return errorHandler({
-                    msg
-                });
-            } else {
-                return errorHandler({
-                    msg: "Failed! Please try again.",
-                    err: true
-                });
-            }
-        });
+    chrome.storage.local.get((data) => {
+        // Add the new user, if already exists, it will be updated
+        let users = data[userTag];
+        users[username] = {
+            password,
+            token
+        }
+
+        // Store updated users' list
+        storeObject(userTag, users).then(
+            (result) => { //TODO: Display stored keys in a new page
+                if (result == 0) {
+                    var msg = `Account information for the ${server} user \"${
+			username}\" is successfully imported.`
+                    return errorHandler({
+                        msg
+                    });
+                } else {
+                    return errorHandler({
+                        msg: "Failed! Please try again.",
+                        err: true
+                    });
+                }
+            });
+    });
 }
 
 
@@ -166,7 +173,10 @@ function generateKey() {
 
     //validate userId
     let userId = document.getElementById("name").value;
-    let {valid, msg} = validateGPGuid(userId);
+    let {
+        valid,
+        msg
+    } = validateGPGuid(userId);
     if (!valid) {
         return errorHandler({
             msg,
