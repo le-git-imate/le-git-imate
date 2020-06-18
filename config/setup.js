@@ -41,7 +41,6 @@ function signContent(data, callback) {
 // Store account info
 function storeAccounts({
     server,
-    password,
     token,
     username,
     userTag
@@ -49,7 +48,6 @@ function storeAccounts({
 
     storeObject(userTag, {
         username,
-        password,
         token
     }).then(
         (result) => {//TODO: Display stored keys in a new page
@@ -72,7 +70,6 @@ function storeAccounts({
 function setGHAccount() {
     let username = document.getElementById(USER_GH).value;
     let token = document.getElementById(TOKEN_GH).value;
-    let password = document.getElementById(PASS_GH).value;
 
     /*//TODO: validate user, pass, and token
     if (!validatePattern(REGEX_USER_GH, username)) {
@@ -82,7 +79,6 @@ function setGHAccount() {
 
     storeAccounts({
         server: GITHUB,
-        password,
         token,
         username,
         userTag: USER_GH,
@@ -95,7 +91,6 @@ function setGLAccount() {
 
     let username = document.getElementById(USER_GL).value;
     let token = document.getElementById(TOKEN_GL).value;
-    let password = document.getElementById(PASS_GL).value;
 
     /*//TODO: validate user, pass, and token
     if (!validatePattern(REGEX_USER_GL, username)) {
@@ -105,7 +100,6 @@ function setGLAccount() {
 
     storeAccounts({
         server: GITLAB,
-        password,
         token,
         username,
         userTag: USER_GL,
