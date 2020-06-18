@@ -1,6 +1,6 @@
-// Create a buffer of username/password
+// Basic Auth using token
 function basicAuth(auth) {
-    return "Basic " + btoa(auth.username + ':' + auth.password)
+    return "Basic " + btoa(`${auth.username}:${auth.token}`)
 }
 
 
